@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "splendidmoons"
+version = "0.1.0"
+description = "Calculates uposatha moonday calendar data for Mahanikaya"
+# pypi identification
+authors = ["Gambhiro <profound.labs@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+typer = "^0.9.0"
+
+[tool.poetry.scripts]
+splendidmoons = 'splendidmoons.runner:main'
+
+[tool.poetry.group.dev.dependencies]
+pytest = "7.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pyright]
+pythonVersion = "3.11"
+typeCheckingMode = "basic"
+
+[tool.ruff]
+ignore = ["E401", "E501", "E712"]
+target-version = "py311"
