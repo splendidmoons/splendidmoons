@@ -1,6 +1,6 @@
 from enum import Enum
 from math import floor
-from datetime import date, timedelta
+import datetime
 from splendidmoons import ADHIKAVARA_HISTORICAL_EXCEPTIONS, USE_HISTORICAL_EXCEPTIONS
 
 from splendidmoons.calendar_consts import (BE_DIFF, CS_DIFF, CYCLE_DAILY, CYCLE_SOLAR, ERA_AVOMAN, ERA_DAYS, ERA_HORAKHUN, ERA_MASAKEN, ERA_UCCABALA, KAMMACUBALA_DAILY, MONTH_LENGTH)
@@ -31,7 +31,7 @@ class CalendarYear:
     Avoman:      int # For the Moon's mean motion
     Masaken:     int # Elapsed months of the era
     Tithi:       int # Age of the moon at the start of the year, aka Thaloengsok or New Year's Day
-    FirstDay:    date
+    FirstDay:    datetime.date
 
     def __init__(self, ce_year: int):
         self.Year = ce_year
@@ -181,7 +181,7 @@ class CalendarYear:
 
         return days
 
-    def asalha_puja(self) -> date:
+    def asalha_puja(self) -> datetime.date:
         """Date of Asalha Puja"""
 
         # In a common year, Asalha Puja is the last day of the 8th month.
@@ -195,15 +195,15 @@ class CalendarYear:
             days = days + 1
 
         prev_kattika = self.calculate_previous_kattika()
-        date = prev_kattika + timedelta(days=days)
+        date = prev_kattika + datetime.timedelta(days=days)
 
         return date
 
-    def calculate_previous_kattika(self) -> date:
+    def calculate_previous_kattika(self) -> datetime.date:
         """Calculate the kattika full moon before this year"""
 
         # Step from a known Kattika date as epoch date
-        kattika_date = date.fromisoformat("2015-11-25")
+        kattika_date = datetime.date.fromisoformat("2015-11-25")
 
         # Determine the direction of stepping
         direction: int
@@ -231,7 +231,7 @@ class CalendarYear:
             elif check_year.is_adhikavara():
                 n += 1
 
-            kattika_date = kattika_date + timedelta(days = (n*direction))
+            kattika_date = kattika_date + datetime.timedelta(days = (n*direction))
 
             y += direction
 

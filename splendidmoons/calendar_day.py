@@ -1,5 +1,5 @@
 from math import floor, sin, pi
-from datetime import date
+import datetime
 
 from splendidmoons.calendar_consts import (BE_DIFF, CS_DIFF, CYCLE_DAILY, CYCLE_SOLAR, ERA_AVOMAN, ERA_MASAKEN,
                                            KAMMACUBALA_DAILY, ERA_DAYS, ERA_HORAKHUN, ERA_YEARS, ERA_UCCABALA,
@@ -30,7 +30,7 @@ class CalendarDay:
     BE_Year:      int # Buddhist Era, CE + 543
     CS_Year:      int # Chulasakkarat Era, CE - 638
     Day:          int # nth day in the Lunar Year
-    Date:         date
+    Date:         datetime.date
     Horakhun:     int
     Kammacubala:  int
     Uccabala:     int
