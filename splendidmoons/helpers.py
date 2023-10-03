@@ -45,28 +45,20 @@ def horakhun_to_date(horakhun: int) -> datetime.date:
     y, m, d = HORAKHUN_REF_DATE_TUPLE
     hor_date = datetime.date(y, m, d)
 
-    delta: int
-    step_days: int
-    direction: int
-
     # Duration is max 290 solar years. Increment the date in 290 year steps.
 
     delta = horakhun - HORAKHUN_REF
     if delta == 0:
         return hor_date
-    elif delta < 0:
-        direction = -1
-    else:
-        direction = 1
 
     step_days = 290 * 356
 
-    while abs(delta) > step_days:
-        days = direction*step_days
-        hor_date += datetime.timedelta(days=days)
-        delta += days * -1
+    # How many times of step_days in delta?
+    times_step: int = floor(delta / step_days)
+    hor_date += datetime.timedelta(days=(times_step * step_days))
 
-    # Add any remaining delta.
-    hor_date += datetime.timedelta(days=delta)
+    # How much remaining days to add?
+    rem_delta: int = delta % step_days
+    hor_date += datetime.timedelta(days=rem_delta)
 
     return hor_date
