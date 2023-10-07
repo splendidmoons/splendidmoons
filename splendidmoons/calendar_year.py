@@ -22,21 +22,21 @@ Tithi: {}
 """
 
 class CalendarYear:
-    Year:        int # Common Era
-    BE_Year:     int # Buddhist Era, CE + 543
-    CS_Year:     int # Chulasakkarat Era, CE - 638
-    Horakhun:    int # Elapsed days of the era, aka Ahargana or Sawana
-    Kammacubala: int # Remaining 800ths of a day
-    Uccabala:    int # Age of the moon's Apogee
-    Avoman:      int # For the Moon's mean motion
-    Masaken:     int # Elapsed months of the era
-    Tithi:       int # Age of the moon at the start of the year, aka Thaloengsok or New Year's Day
-    FirstDay:    datetime.date
+    year:        int # Common Era
+    be_Year:     int # Buddhist Era, CE + 543
+    cs_Year:     int # Chulasakkarat Era, CE - 638
+    horakhun:    int # Elapsed days of the era, aka Ahargana or Sawana
+    kammacubala: int # Remaining 800ths of a day
+    uccabala:    int # Age of the moon's Apogee
+    avoman:      int # For the Moon's mean motion
+    masaken:     int # Elapsed months of the era
+    tithi:       int # Age of the moon at the start of the year, aka Thaloengsok or New Year's Day
+    first_day:    datetime.date
 
     def __init__(self, ce_year: int):
-        self.Year = ce_year
-        self.BE_Year = self.Year + BE_DIFF
-        self.CS_Year = self.Year - CS_DIFF
+        self.year = ce_year
+        self.be_year = self.year + BE_DIFF
+        self.cs_year = self.year - CS_DIFF
 
         # helper variables
         a: int
@@ -47,25 +47,25 @@ class CalendarYear:
         # === A. Find the relevant values for the astronomical New Year ===
 
         # +1 is another constant correction, H3
-        a = (self.CS_Year * ERA_DAYS) + ERA_HORAKHUN
-        self.Horakhun = int(floor(float(a/KAMMACUBALA_DAILY + 1)))
+        a = (self.cs_year * ERA_DAYS) + ERA_HORAKHUN
+        self.horakhun = int(floor(float(a/KAMMACUBALA_DAILY + 1)))
         # Horakhun = 483969
 
-        self.Kammacubala = KAMMACUBALA_DAILY - (a % KAMMACUBALA_DAILY)
+        self.kammacubala = KAMMACUBALA_DAILY - (a % KAMMACUBALA_DAILY)
         # Kammacubala = 552
 
-        self.Uccabala = (self.Horakhun + ERA_UCCABALA) % 3232
+        self.uccabala = (self.horakhun + ERA_UCCABALA) % 3232
         # Uccabala = 1780
 
-        a = (self.Horakhun * CYCLE_DAILY) + ERA_AVOMAN
-        self.Avoman = a % CYCLE_SOLAR
+        a = (self.horakhun * CYCLE_DAILY) + ERA_AVOMAN
+        self.avoman = a % CYCLE_SOLAR
         # Avoman = 61
 
         b = int(floor(float(a) / CYCLE_SOLAR))
-        self.Masaken = int(floor(float((b + ERA_MASAKEN + self.Horakhun) / MONTH_LENGTH)))
+        self.masaken = int(floor(float((b + ERA_MASAKEN + self.horakhun) / MONTH_LENGTH)))
         # Masaken = 16388
 
-        self.Tithi = (b + self.Horakhun) % MONTH_LENGTH
+        self.tithi = (b + self.horakhun) % MONTH_LENGTH
         # Tithi = 23
 
     def year_type(self) -> YearType:
@@ -78,18 +78,18 @@ class CalendarYear:
 
     def is_adhikamasa(self) -> bool:
         # If next year also qualifies for adhikamāsa, then this year isn't
-        next_year = CalendarYear(self.Year + 1)
+        next_year = CalendarYear(self.year + 1)
         return (not next_year.would_be_adhikamasa() and self.would_be_adhikamasa())
 
     def would_be_adhikamasa(self) -> bool:
-        t = self.Tithi
+        t = self.tithi
         # Eade says t >= 25, but then 2012 (t=24) would not be adhikamāsa.
         return ((t >= 24 and t <= 29) or (t >= 0 and t <= 5))
 
     def is_adhikavara(self) -> bool:
         if USE_HISTORICAL_EXCEPTIONS \
-           and self.Year in ADHIKAVARA_HISTORICAL_EXCEPTIONS.keys():
-                return ADHIKAVARA_HISTORICAL_EXCEPTIONS[self.Year]
+           and self.year in ADHIKAVARA_HISTORICAL_EXCEPTIONS.keys():
+                return ADHIKAVARA_HISTORICAL_EXCEPTIONS[self.year]
 
         if self.is_adhikamasa():
             return False
@@ -101,11 +101,11 @@ class CalendarYear:
             return self.would_be_adhikavara()
 
     def suriya_values_str(self) -> str:
-        return SURIYA_YEAR_VALUES_FMT.format(self.Year, self.BE_Year, self.CS_Year, self.Horakhun, self.Kammacubala,
-                                        self.Uccabala, self.Avoman, self.Masaken, self.Tithi)
+        return SURIYA_YEAR_VALUES_FMT.format(self.year, self.be_year, self.cs_year, self.horakhun, self.kammacubala,
+                                        self.uccabala, self.avoman, self.masaken, self.tithi)
 
     def is_suriya_leap(self) -> bool:
-        return (self.Kammacubala <= 207)
+        return (self.kammacubala <= 207)
 
     def would_be_adhikavara(self) -> bool:
         """
@@ -118,33 +118,33 @@ class CalendarYear:
 
         if self.is_suriya_leap():
             # Both <= and < seems to work. Eade phrases it as <=.
-            return self.Avoman <= 126
+            return self.avoman <= 126
         else:
             # Eade says Avoman <= 137, but that doesn't work.
-            return self.Avoman < 137
+            return self.avoman < 137
 
     def has_carried_adhikavara(self) -> bool:
-        last_year = CalendarYear(self.Year - 1)
+        last_year = CalendarYear(self.year - 1)
         return (last_year.is_adhikamasa() and last_year.would_be_adhikavara())
 
     def adhikavara_cycle_pos(self) -> int:
         """Determine the position in the 57 year cycle. Assume 1984 = 1, 2040 = 57, 2041 = 1."""
-        return int(abs(float(1984-57*10-self.Year)))%57 + 1
+        return int(abs(float(1984-57*10-self.year)))%57 + 1
 
     def adhikamasa_cycle_pos(self) -> int:
         """Determine the position in the 19 year cycle."""
-        return int(abs(float(1984-19*10-self.Year)))%19 + 1
+        return int(abs(float(1984-19*10-self.year)))%19 + 1
 
     def delta_adhikamasa(self) -> int:
         """Years since last adhikamāsa."""
 
-        year = self.Year - 1
+        year = self.year - 1
         while True:
             check = CalendarYear(year)
             if check.is_adhikamasa():
-                return self.Year - check.Year
+                return self.year - check.year
             # Avoid looking forever.
-            if self.Year-check.Year > 6:
+            if self.year-check.year > 6:
                 break
             year -= 1
 
@@ -153,13 +153,13 @@ class CalendarYear:
     def delta_adhikavara(self) -> int:
         """Years since last adhikavāra."""
 
-        year = self.Year - 1
+        year = self.year - 1
         while True:
             check = CalendarYear(year)
             if check.is_adhikavara():
-                return self.Year - check.Year
+                return self.year - check.year
             # Avoid looking forever.
-            if self.Year-check.Year > 12:
+            if self.year-check.year > 12:
                 break
 
             year -= 1
@@ -207,14 +207,14 @@ class CalendarYear:
 
         # Determine the direction of stepping
         direction: int
-        if kattika_date.year < self.Year-1:
+        if kattika_date.year < self.year-1:
             direction = 1
         else:
             direction = -1
 
         # Step in direction until the Kattika in the prev. solar year
         y = kattika_date.year
-        while y != self.Year-1:
+        while y != self.year-1:
             check_year: CalendarYear
             n: int
 

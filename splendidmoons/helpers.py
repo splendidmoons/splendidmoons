@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Dict
 from math import floor
 import datetime
 
@@ -62,3 +62,10 @@ def horakhun_to_date(horakhun: int) -> datetime.date:
     hor_date += datetime.timedelta(days=rem_delta)
 
     return hor_date
+
+SEASON_NAME: Dict[int, str] = {
+    0: "",
+    1: "Hemanta",
+    2: "Gimha",
+    3: "Vassāna",
+}

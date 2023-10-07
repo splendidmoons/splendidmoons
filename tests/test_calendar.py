@@ -336,22 +336,22 @@ def test_raek():
     # CS 1325 is adhikavāra
     day = CalendarDay(1963, 103)
     expect = "0:19°34'"
-    ral = degree_to_ral_str(day.Raek)
+    ral = degree_to_ral_str(day.raek)
     assert ral == expect
 
     expect = "2:19°28'"
-    ral = degree_to_ral_str(day.TrueSun)
+    ral = degree_to_ral_str(day.true_sun)
     assert ral == expect
 
     expect = "8:7°41'"
-    ral = degree_to_ral_str(day.TrueMoon)
+    ral = degree_to_ral_str(day.true_moon)
     assert ral == expect
 
     # CS 1324, Raek 0; 20 : 38
     # CS 1324 is common year
     day = CalendarDay(1962, 103)
     expect = "0:20°39'" # +1 arcmin diff to the value in the paper, probably rounding differences
-    ral = degree_to_ral_str(day.Raek)
+    ral = degree_to_ral_str(day.raek)
     assert ral == expect
 
     # 2015-07-15
@@ -359,29 +359,29 @@ def test_raek():
     # 2015 is adhikamāsa
     day = CalendarDay(2015, 103+30-15)
     expect = "2:26°35'" # myhora.com: Moon is (2; 26 : 12)
-    ral = degree_to_ral_str(day.TrueMoon)
+    ral = degree_to_ral_str(day.true_moon)
     assert ral == expect
 
     # 1288-04-14
     # Example cited in Calendrical.
     day = CalendarDay(1288, 41)
     expect = "0:19°58'"
-    ral = degree_to_ral_str(day.TrueSun)
+    ral = degree_to_ral_str(day.true_sun)
     assert ral == expect
 
     expect = "5:11°27'"
-    ral = degree_to_ral_str(day.TrueMoon)
+    ral = degree_to_ral_str(day.true_moon)
     assert ral == expect
 
     # 1288-06-15
     # Common year, Asalha Puja. Date is Full Moon on AstroPixels.
     day = CalendarDay(1288, 103)
     expect = "2:19°9'"
-    ral = degree_to_ral_str(day.TrueSun)
+    ral = degree_to_ral_str(day.true_sun)
     assert ral == expect
 
     expect = "8:19°1'"
-    ral = degree_to_ral_str(day.TrueMoon)
+    ral = degree_to_ral_str(day.true_moon)
     assert ral == expect
 
 TEST_HORAKHUN_TO_DATE_STR: Dict[int, str] = {
@@ -425,11 +425,11 @@ Date: {}
 True Sun: {}
 True Moon: {}
 Tithi: {}
-""".format(day.Horakhun,
-           horakhun_to_date(day.Horakhun).strftime("%Y %B %d"),
-           degree_to_ral_str(day.TrueSun),
-           degree_to_ral_str(day.TrueMoon),
-           day.Tithi)
+""".format(day.horakhun,
+           horakhun_to_date(day.horakhun).strftime("%Y %B %d"),
+           degree_to_ral_str(day.true_sun),
+           degree_to_ral_str(day.true_moon),
+           day.tithi)
     assert res == expected
 
     # Casting of the Buddha image at Wat Kiat. Eade has the duang inscription in the Mangrai Buddha paper.
@@ -448,11 +448,11 @@ Horakhun: {}
 Tithi: {}
 True Sun: {}
 True Moon: {}
-""".format(day.Day,
-           horakhun_to_date(day.Horakhun).strftime("%Y %b %d"),
-           day.Horakhun,
-           day.Tithi,
-           degree_to_ral_str(day.TrueSun),
-           degree_to_ral_str(day.TrueMoon))
+""".format(day.day,
+           horakhun_to_date(day.horakhun).strftime("%Y %b %d"),
+           day.horakhun,
+           day.tithi,
+           degree_to_ral_str(day.true_sun),
+           degree_to_ral_str(day.true_moon))
 
     assert res == expected
