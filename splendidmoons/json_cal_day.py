@@ -206,8 +206,8 @@ def generate_solar_year(ce_year: int) -> List[HasIcalEvent]:
                 e = MajorEvent()
                 e.date = uposatha.date
                 e.calendar = uposatha.calendar
-                e.summary = "Last day of Vassa"
-                e.description = "Last day of Vassa"
+                e.summary = "Last Day of Vassa"
+                e.description = "Last Day of Vassa"
                 events.append(e)
 
     return events

@@ -117,7 +117,6 @@ ASSOC_EVENTS: Dict[str, List[CalendarAssocEvent]] = {
 
     "vesakha": [
         CalendarAssocEvent(
-            # FIXME note = "Vesākha Pūjā",
             note = "Visākha Pūjā",
             label = "vesakha",
             day_text = "Full Moon",
@@ -131,8 +130,7 @@ ASSOC_EVENTS: Dict[str, List[CalendarAssocEvent]] = {
             day_text = "Full Moon"
         ),
         CalendarAssocEvent(
-            # FIXME note = "First Day of Vassa",
-            note = "First day of Vassa",
+            note = "First Day of Vassa",
             label = "first-day",
             day_text = "",
         ),
@@ -145,8 +143,7 @@ ASSOC_EVENTS: Dict[str, List[CalendarAssocEvent]] = {
             day_text = "Full Moon",
         ),
         CalendarAssocEvent(
-            # FIXME note = "Last Day of Vassa",
-            note = "Last day of Vassa",
+            note = "Last Day of Vassa",
             label = "last-day",
             day_text = "Full Moon",
         ),
