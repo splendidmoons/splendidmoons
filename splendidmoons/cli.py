@@ -1,5 +1,5 @@
-import csv
-from typing import List, Optional
+import csv, json
+from typing import List, Optional, TypedDict
 import typer
 
 from splendidmoons.event_helpers import CalendarEvent, parse_annual_events_csv, year_moondays, year_moondays_associated_events
@@ -59,8 +59,12 @@ def year_events_csv(from_year: int,
             writer.writerow(row)
 
 @app.command()
-def year_events_ical(from_year: int, to_year: int, ical_path: str):
-    events = _collect_events(from_year, to_year)
+def year_events_ical(from_year: int,
+                    to_year: int,
+                    ical_path: str,
+                    annual_events_csv_path: Optional[str] = None):
+
+    events = _collect_events(from_year, to_year, annual_events_csv_path)
 
     def _to_vevent(x: CalendarEvent) -> IcalVEvent:
         return ical_vevent(x['date'], x['note'])
@@ -69,7 +73,39 @@ def year_events_ical(from_year: int, to_year: int, ical_path: str):
 
     write_ical(ical_vevents, ical_path)
 
-# @app.command()
-# def year_events_json(from_year: int, to_year: int, json_path: str):
-#     # FIXME
-#     pass
+@app.command()
+def year_events_json(from_year: int,
+                     to_year: int,
+                     json_path: str,
+                     annual_events_csv_path: Optional[str] = None):
+
+    events = _collect_events(from_year, to_year, annual_events_csv_path)
+
+    class JsonEvent(TypedDict):
+        date: str
+        day_text: str
+        note: str
+        label: str
+        phase: str
+        season: str
+        season_number: int
+        season_total: int
+        days: int
+
+    def _to_json_event(x: CalendarEvent) -> JsonEvent:
+        return JsonEvent(
+            date = x['date'].isoformat(),
+            day_text = x['day_text'],
+            note = x['note'],
+            label = x['label'],
+            phase = x['phase'],
+            season = x['season'],
+            season_number = x['season_number'],
+            season_total = x['season_total'],
+            days = x['days'],
+        )
+
+    json_events = [_to_json_event(x) for x in events]
+
+    with open(json_path, 'w', encoding='utf-8') as f:
+        f.write(json.dumps(json_events))
