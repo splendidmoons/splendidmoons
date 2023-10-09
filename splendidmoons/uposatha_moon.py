@@ -7,7 +7,6 @@ from splendidmoons.ical import HasIcalEvent
 
 class UposathaMoon(HasIcalEvent):
     date:           datetime.date = datetime.date.fromtimestamp(0)
-    calendar:       int = 0  # 0 mahanikaya, 1 dhammayut, 2 srilanka, 3 myanmar
     phase:          str = "" # only new or full. waxing and waning will be derived.
     event:          str = "" # magha, vesakha, asalha, pavarana
     s_number:       int = 0  # 1 of 8 in Hemanta
@@ -32,8 +31,6 @@ class UposathaMoon(HasIcalEvent):
 
         is_adhikamasa_year = cal_year.is_adhikamasa()
         is_adhikavara_year = cal_year.is_adhikavara()
-
-        nu.calendar = 0 # mahanikaya
 
         # Alternating New Moon and Full Moon uposathas.
 

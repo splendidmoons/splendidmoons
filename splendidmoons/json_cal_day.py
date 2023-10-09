@@ -125,7 +125,6 @@ def generate_solar_year(ce_year: int) -> List[HasIcalEvent]:
 
     lu = UposathaMoon()
     lu.date =         prev_kattika
-    lu.calendar =     0 # mahanikaya
     lu.phase =        "full"
     lu.s_number =     8
     lu.s_total =      8
@@ -167,7 +166,6 @@ def generate_solar_year(ce_year: int) -> List[HasIcalEvent]:
             if uposatha.event == "magha":
                 e = MajorEvent()
                 e.date = uposatha.date
-                e.calendar = uposatha.calendar
                 e.summary = "Māgha Pūjā"
                 e.description = "Māgha Pūjā"
                 events.append(e)
@@ -175,7 +173,6 @@ def generate_solar_year(ce_year: int) -> List[HasIcalEvent]:
             elif uposatha.event == "vesakha":
                 e = MajorEvent()
                 e.date = uposatha.date
-                e.calendar = uposatha.calendar
                 e.summary = "Vesākha Pūjā"
                 e.description = "Vesākha Pūjā"
                 events.append(e)
@@ -183,14 +180,12 @@ def generate_solar_year(ce_year: int) -> List[HasIcalEvent]:
             elif uposatha.event == "asalha":
                 e = MajorEvent()
                 e.date = uposatha.date
-                e.calendar = uposatha.calendar
                 e.summary = "Āsāḷha Pūjā"
                 e.description = "Āsāḷha Pūjā"
                 events.append(e)
 
                 e = MajorEvent()
                 e.date = uposatha.date + datetime.timedelta(days=1)
-                e.calendar = uposatha.calendar
                 e.summary = "First day of Vassa"
                 e.description = "First day of Vassa"
                 events.append(e)
@@ -198,14 +193,12 @@ def generate_solar_year(ce_year: int) -> List[HasIcalEvent]:
             elif uposatha.event == "pavarana":
                 e = MajorEvent()
                 e.date = uposatha.date
-                e.calendar = uposatha.calendar
                 e.summary = "Pavāraṇā Day"
                 e.description = "Pavāraṇā Day"
                 events.append(e)
 
                 e = MajorEvent()
                 e.date = uposatha.date
-                e.calendar = uposatha.calendar
                 e.summary = "Last Day of Vassa"
                 e.description = "Last Day of Vassa"
                 events.append(e)

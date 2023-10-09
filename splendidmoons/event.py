@@ -9,7 +9,6 @@ They may be anniversaries, Kathinas or occasional notes.
 
 class Event(HasIcalEvent):
     date: datetime.date = datetime.date.fromtimestamp(0)
-    calendar: int = 0 # mahanikaya, dhammayut, srilanka, myanmar
     summary: str = ""
     description: str = ""
 

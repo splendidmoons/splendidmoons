@@ -169,7 +169,6 @@ def year_moondays_associated_events(ce_year: int,
 
     lu = UposathaMoon()
     lu.date =         prev_kattika
-    lu.calendar =     0 # mahanikaya
     lu.phase =        "full"
     lu.s_number =     8
     lu.s_total =      8
