@@ -10,6 +10,12 @@ class YearType(int, Enum):
     Adhikamasa = 1
     Adhikavara = 2
 
+YEAR_TYPE_NAME = {
+    YearType.Normal: "Normal",
+    YearType.Adhikamasa: "Adhikamāsa",
+    YearType.Adhikavara: "Adhikavāra",
+}
+
 SURIYA_YEAR_VALUES_FMT = """CE: {}
 BE: {}
 CS: {}

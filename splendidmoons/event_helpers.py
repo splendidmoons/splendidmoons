@@ -3,7 +3,7 @@ from typing import List, TypedDict, Dict, Optional
 import datetime
 from splendidmoons.calendar_consts import BE_DIFF
 
-from splendidmoons.calendar_year import CalendarYear
+from splendidmoons.calendar_year import CalendarYear, YearType
 from splendidmoons.helpers import SEASON_NAME
 from splendidmoons.json_cal_day import get_json_cal_days
 from splendidmoons.uposatha_moon import UposathaMoon
@@ -152,6 +152,7 @@ ASSOC_EVENTS: Dict[str, List[CalendarAssocEvent]] = {
 
 def year_moondays_associated_events(ce_year: int,
                                     assoc_events: Optional[Dict[str, List[CalendarAssocEvent]]] = None,
+                                    show_adhikamasa_adhikamasa = False,
                                     ) -> List[CalendarEvent]:
     """
     Collect the major moondays and add associated events.
@@ -220,6 +221,42 @@ def year_moondays_associated_events(ce_year: int,
                             )
 
                         events.append(e)
+
+        # Add Adhikamasa and Adhikavara events.
+
+        if show_adhikamasa_adhikamasa:
+            if cal_year.year_type() == YearType.Adhikamasa:
+                # Full Moon of 2nd Asalha, 10th Uposatha of Gimha (10/10)
+                # New Moon of 2nd Asalha, 1st Uposatha of Vassana (1/8)
+                if (uposatha.lunar_season == 2 and uposatha.s_number == 10) \
+                   or (uposatha.lunar_season == 3 and uposatha.s_number == 1):
+                    e = CalendarEvent(
+                        date = uposatha.date,
+                        day_text = "Adhikamāsa",
+                        note = "Adhikamāsa",
+                        label = "adhikamasa",
+                        phase = uposatha.phase,
+                        season = SEASON_NAME[uposatha.lunar_season],
+                        season_number = uposatha.s_number,
+                        season_total = uposatha.s_total,
+                        days = uposatha.u_days,
+                    )
+                    events.append(e)
+
+            elif cal_year.year_type() == YearType.Adhikavara:
+                if uposatha.has_adhikavara:
+                    e = CalendarEvent(
+                        date = uposatha.date,
+                        day_text = "Adhikavāra",
+                        note = "Adhikavāra",
+                        label = "adhikavara",
+                        phase = uposatha.phase,
+                        season = SEASON_NAME[uposatha.lunar_season],
+                        season_number = uposatha.s_number,
+                        season_total = uposatha.s_total,
+                        days = uposatha.u_days,
+                    )
+                    events.append(e)
 
     return events
 
