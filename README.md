@@ -13,7 +13,6 @@ $ pip install splendidmoons
 $ splendidmoons asalha-puja 2023
 2023-08-01
 $ splendidmoons year-events-csv 2020 2030 moondays.csv
-#+end_src
 ```
 
 ``` python
