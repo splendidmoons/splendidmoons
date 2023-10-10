@@ -4,6 +4,8 @@
 
 Python library
 
+<https://pypi.org/project/splendidmoons/>
+
 Generates the calendar data for <http://splendidmoons.github.io/>
 
 (This is a Python port and replacement of the older [suriya-go](https://github.com/splendidmoons/suriya-go) GoLang package.)
