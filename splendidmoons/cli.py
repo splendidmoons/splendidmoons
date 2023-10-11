@@ -23,8 +23,6 @@ def _collect_events(from_year: int,
                     annual_events_csv_path: Optional[str] = None,
                     ) -> List[CalendarEvent]:
 
-
-
     events: List[CalendarEvent] = []
 
     year = from_year

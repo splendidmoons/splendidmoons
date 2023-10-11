@@ -1,9 +1,26 @@
 import datetime
-from typing import Self
+from typing import Self, Dict
 from splendidmoons.calendar_year import CalendarYear
 
 from splendidmoons.helpers import SEASON_NAME
 from splendidmoons.ical import HasIcalEvent
+
+# This is not a strict sequential order, but rather a number-to-label lookup, like an enum.
+MONTH_NAMES: Dict[int, str] = {
+    1: "Magasira",
+    2: "Phussa",
+    3: "Māgha",
+    4: "Phagguṇa",
+    5: "Citta",
+    6: "Visākha",
+    7: "Jeṭṭha",
+    8: "Āsāḷha",
+    9: "Savaṇa",
+    10: "Bhaddapāda",
+    11: "Assayuja",
+    12: "Kattika",
+    13: "2nd Āsāḷha",
+}
 
 class UposathaMoon(HasIcalEvent):
     date:           datetime.date = datetime.date.fromtimestamp(0)

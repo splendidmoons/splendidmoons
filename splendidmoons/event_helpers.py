@@ -6,7 +6,7 @@ from splendidmoons.calendar_consts import BE_DIFF
 from splendidmoons.calendar_year import CalendarYear, YearType
 from splendidmoons.helpers import SEASON_NAME
 from splendidmoons.json_cal_day import get_json_cal_days
-from splendidmoons.uposatha_moon import UposathaMoon
+from splendidmoons.uposatha_moon import MONTH_NAMES, UposathaMoon
 
 class CalendarEvent(TypedDict):
     date: datetime.date
@@ -152,7 +152,8 @@ ASSOC_EVENTS: Dict[str, List[CalendarAssocEvent]] = {
 
 def year_moondays_associated_events(ce_year: int,
                                     assoc_events: Optional[Dict[str, List[CalendarAssocEvent]]] = None,
-                                    show_adhikamasa_adhikamasa = False,
+                                    show_month_names = False,
+                                    show_adhikamasa_adhikavara = False,
                                     ) -> List[CalendarEvent]:
     """
     Collect the major moondays and add associated events.
@@ -185,46 +186,70 @@ def year_moondays_associated_events(ce_year: int,
         uposatha: UposathaMoon = last_uposatha.next_uposatha()
         last_uposatha = uposatha
 
+        if uposatha.date.year != ce_year:
+            continue
+
+        # Add month names to Full Moons.
+
+        if show_month_names and uposatha.phase == "full":
+            n = uposatha.lunar_month
+            if n == 13:
+                month_number = "8/8"
+            else:
+                month_number = str(n)
+            month_name = f"{MONTH_NAMES[uposatha.lunar_month]} ({month_number})"
+
+            e = CalendarEvent(
+                date = uposatha.date,
+                day_text = month_name,
+                note = month_name,
+                label = "month-name",
+                phase = uposatha.phase,
+                season = SEASON_NAME[uposatha.lunar_season],
+                season_number = uposatha.s_number,
+                season_total = uposatha.s_total,
+                days = uposatha.u_days,
+            )
+            events.append(e)
+
         # Add associated events for each major event.
 
-        if uposatha.date.year == ce_year:
+        for k in ["magha", "vesakha", "asalha", "pavarana"]:
+            if uposatha.event == k \
+                and k in assoc_events.keys():
 
-            for k in ["magha", "vesakha", "asalha", "pavarana"]:
-                if uposatha.event == k \
-                   and k in assoc_events.keys():
+                for e in assoc_events[k]:
+                    if e['label'] == 'first-day':
+                        e = CalendarEvent(
+                            date = uposatha.date + datetime.timedelta(days=1),
+                            day_text = e['day_text'],
+                            note = e['note'],
+                            label = e['label'],
+                            phase = "",
+                            season = "",
+                            season_number = 0,
+                            season_total = 0,
+                            days = 0,
+                        )
 
-                    for e in assoc_events[k]:
-                        if e['label'] == 'first-day':
-                            e = CalendarEvent(
-                                date = uposatha.date + datetime.timedelta(days=1),
-                                day_text = e['day_text'],
-                                note = e['note'],
-                                label = e['label'],
-                                phase = "",
-                                season = "",
-                                season_number = 0,
-                                season_total = 0,
-                                days = 0,
-                            )
+                    else:
+                        e = CalendarEvent(
+                            date = uposatha.date,
+                            day_text = e['day_text'],
+                            note = e['note'],
+                            label = e['label'],
+                            phase = uposatha.phase,
+                            season = SEASON_NAME[uposatha.lunar_season],
+                            season_number = uposatha.s_number,
+                            season_total = uposatha.s_total,
+                            days = uposatha.u_days,
+                        )
 
-                        else:
-                            e = CalendarEvent(
-                                date = uposatha.date,
-                                day_text = e['day_text'],
-                                note = e['note'],
-                                label = e['label'],
-                                phase = uposatha.phase,
-                                season = SEASON_NAME[uposatha.lunar_season],
-                                season_number = uposatha.s_number,
-                                season_total = uposatha.s_total,
-                                days = uposatha.u_days,
-                            )
-
-                        events.append(e)
+                    events.append(e)
 
         # Add Adhikamasa and Adhikavara events.
 
-        if show_adhikamasa_adhikamasa:
+        if show_adhikamasa_adhikavara:
             if cal_year.year_type() == YearType.Adhikamasa:
                 # Full Moon of 2nd Asalha, 10th Uposatha of Gimha (10/10)
                 # New Moon of 2nd Asalha, 1st Uposatha of Vassana (1/8)
