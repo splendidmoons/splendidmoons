@@ -91,17 +91,9 @@ def merge_event_into_cal_days(cal_days: List[JsonCalDay],
 
     return cal_days
 
-def get_astro_moons(from_date: datetime.date,
-                    to_date: datetime.date) -> List[AstroMoon]:
-    # FIXME
-    return []
-
 def get_json_cal_days(from_date: datetime.date,
                       to_date: datetime.date) -> List[JsonCalDay]:
     cal_days: List[JsonCalDay] = []
-
-    for d in get_astro_moons(from_date, to_date):
-        merge_event_into_cal_days(cal_days, d)
 
     year = from_date.year
     while year <= to_date.year:
