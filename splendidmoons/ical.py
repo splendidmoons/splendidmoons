@@ -73,14 +73,14 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 """
 
-MAHANIKAYA_ICAL_HEADER = """BEGIN:VCALENDAR
+MAHANIKAYA_ICAL_HEADER_TMPL = """BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:Uposatha Moondays Mahānikāya EN
-URL:http://splendidmoons.github.io/ical/mahanikaya.ical
-NAME:Uposatha Moondays (Mahānikāya)
-X-WR-CALNAME:Uposatha Moondays (Mahānikāya)
-DESCRIPTION:Uposatha Moondays (Mahānikāya)
-X-WR-CALDESC:Uposatha Moondays (Mahānikāya)
+PRODID:{prod_id}
+URL:{url}
+NAME:{name}
+X-WR-CALNAME:{name}
+DESCRIPTION:{name}
+X-WR-CALDESC:{name}
 REFRESH-INTERVAL;VALUE=DURATION:PT12H
 X-PUBLISHED-TTL:PT12H
 COLOR:244:196:48
@@ -88,8 +88,18 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 """
 
-def write_ical(events: List[IcalVEvent], ical_path: str):
-    text = MAHANIKAYA_ICAL_HEADER
+
+def write_ical(events: List[IcalVEvent],
+               ical_path: str,
+               ical_prod_id = "Uposatha Moondays Mahānikāya EN",
+               ical_url = "http://splendidmoons.github.io/ical/mahanikaya.ical",
+               ical_name = "Uposatha Moondays (Mahānikāya)"):
+
+    text = MAHANIKAYA_ICAL_HEADER_TMPL.format(
+        prod_id = ical_prod_id,
+        url = ical_url,
+        name = ical_name,
+    )
 
     for e in events:
         text += ical_vevent_to_str(e)
